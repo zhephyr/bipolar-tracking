@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
     { key: 'meals', text: 'Did you eat regular meals today?' },
     { key: 'activity', text: 'How active were you today?' },
     { key: 'mood', text: 'How would you rate your mood today?' },
+    { key: 'evening', text: 'How did you spend your evening?' },
     { key: 'sleep_plan', text: 'Do you have a sleep plan for tonight?' }
   ];
 
@@ -52,17 +53,26 @@ export class AppComponent implements OnInit {
   updateLandscape(): void {
     const progress = this.questions.length > 1 ? this.current / (this.questions.length - 1) : 0;
     const sunLeft = (10 + progress * 80).toFixed(1) + '%';
-      const sunTop = ( (60 - Math.sin(Math.PI * progress) * 35) ).toFixed(1) + '%';
-    const sky = this.interpolate(['#5C3D2E','#FFD8A8','#87CEEB','#6EC1FF','#B19CD9','#0B2447'], progress);
-    const land = this.interpolate(['#3D3A28','#E6E2AF','#9BCB3C','#7BB241','#6FA34F','#2B3A25'], progress);
+    const sunTop = ( (60 - Math.sin(Math.PI * progress) * 35) ).toFixed(1) + '%';
+    
+    // Moon follows the same arc but lags 4 questions behind, making it invisible when behind the land
+    const moonProgress = (this.current - 4) / (this.questions.length - 1);
+    const moonLeft = (10 + moonProgress * 80).toFixed(1) + '%';
+    const moonTop = ( (60 - Math.sin(Math.PI * moonProgress) * 35) ).toFixed(1) + '%';
+    const moonOpacity = moonProgress >= 0 && moonProgress <= 1 ? 1 : 0;
+    
+    const sky = this.interpolate(['#5C3D2E','#FFD8A8','#87CEEB','#6EC1FF','#87CEEB','#B19CD9','#0B2447'], progress);
+    const land = this.interpolate(['#3D3A28','#E6E2AF','#9BCB3C','#7BB241','#9BCB3C','#6FA34F','#2B3A25'], progress);
     const night = Math.max(0, (progress - 0.7) / 0.3);
     const root = document.documentElement;
     root.style.setProperty('--sky', sky);
     root.style.setProperty('--land', land);
     root.style.setProperty('--sun-left', sunLeft);
     root.style.setProperty('--sun-top', sunTop);
+    root.style.setProperty('--moon-left', moonLeft);
+    root.style.setProperty('--moon-top', moonTop);
     root.style.setProperty('--stars-opacity', String(night));
-    root.style.setProperty('--moon-opacity', String(night));
+    root.style.setProperty('--moon-opacity', String(moonOpacity));
   }
 
   interpolate(stages: string[], t: number): string {

@@ -3,6 +3,8 @@
   --land: #9BCB3C;
   --sun-left: 10%;
   --sun-top: 50%;
+  --moon-left: 90%;
+  --moon-top: 50%;
   --stars-opacity: 0;
   --moon-opacity: 0;
   --sky-top: color-mix(in srgb, var(--sky) 85%, white 15%);
@@ -58,12 +60,16 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
 }
 
 .moon {
-  position: absolute; right: 12%; top: 12%;
+  position: absolute;
   width: 64px; height: 64px; border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #fff, #cfd8dc);
+  left: var(--moon-left);
+  top: var(--moon-top);
+  transform: translate(-50%, -50%);
   opacity: var(--moon-opacity);
   filter: blur(0.3px);
   z-index: 2;
+  transition: left 400ms linear, top 400ms linear, opacity 400ms linear;
 }
 
 .stars {
