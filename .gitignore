@@ -20,3 +20,56 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.pidb
+*.pdb
+*.dll
+*.exe
+*.cache
+*.log
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Visual Studio
+.vs/
+*.vsidx
+*.vspscc
+*.vsscc
+*.sln.docstates
+*.sln.iml
+*.suo
+*.user
+*.userosscache
+*.sln.docstates.tmp
+*.vssscc
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.pyc
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
