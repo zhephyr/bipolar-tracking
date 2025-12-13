@@ -44,13 +44,14 @@ public class CheckInsController : ControllerBase
         }
 
         // Check for existing entry for the same date and questionId
+        // Normalize the incoming date to just the date part for comparison
         var dateOnly = checkIn.Date.Date;
         var nextDay = dateOnly.AddDays(1);
-        var existingCheckIn = await _context.CheckIns
-            .FirstOrDefaultAsync(c => 
-                c.QuestionId == checkIn.QuestionId && 
-                c.Date >= dateOnly && 
-                c.Date < nextDay);
+        
+        var existingCheckIn = (await _context.CheckIns
+            .Where(c => c.QuestionId == checkIn.QuestionId && c.Date >= dateOnly && c.Date < nextDay)
+            .ToListAsync())
+            .FirstOrDefault(c => c.Date.Date == dateOnly);
 
         if (existingCheckIn != null)
         {

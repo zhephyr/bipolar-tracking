@@ -52,10 +52,9 @@ import { CheckIn } from '../../models/check-in.model';
         <div class="nav">
           <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
           <button type="button" (click)="next()" *ngIf="current < questions.length - 1">Next</button>
-          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !submitted" [disabled]="!isComplete()">{{hasExistingData ? 'Update' : 'Submit'}}</button>
-          <button type="button" (click)="reset()" *ngIf="submitted">Start New Check-In</button>
+          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !justSaved" [disabled]="!isComplete()">{{hasExistingData ? 'Update' : 'Submit'}}</button>
         </div>
-        <p *ngIf="submitted" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in {{hasExistingData ? 'updated' : 'saved'}}!</p>
+        <p *ngIf="justSaved" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in {{hasExistingData ? 'updated' : 'saved'}}!</p>
         <div class="pagination">
           <span *ngFor="let q of questions; let i = index" 
                 class="dot" 
@@ -86,6 +85,7 @@ export class JournalComponent implements OnInit {
   answer: number | null = null;
   answers: (number | null)[] = new Array(7).fill(null);
   submitted = false;
+  justSaved = false;
   hasExistingData = false;
   today = new Date();
 
@@ -99,12 +99,22 @@ export class JournalComponent implements OnInit {
   loadTodayCheckIns(): void {
     this.checkInService.getCheckIns(1).subscribe({
       next: (checkIns) => {
+        console.log('Loaded check-ins:', checkIns);
         if (checkIns && checkIns.length > 0) {
+          // Normalize today to UTC midnight for comparison
+          const todayUTC = new Date(this.today);
+          todayUTC.setUTCHours(0, 0, 0, 0);
+          const todayUTCString = todayUTC.toISOString().split('T')[0]; // Just the date part YYYY-MM-DD
+          
           const todayCheckIns = checkIns.filter(ci => {
             const ciDate = new Date(ci.date);
-            return ciDate.toDateString() === this.today.toDateString();
+            const ciDateString = ciDate.toISOString().split('T')[0];
+            const isSameDay = ciDateString === todayUTCString;
+            console.log('Comparing:', ciDateString, 'with', todayUTCString, '=', isSameDay);
+            return isSameDay;
           });
           
+          console.log('Today check-ins:', todayCheckIns);
           if (todayCheckIns.length > 0) {
             this.hasExistingData = true;
             todayCheckIns.forEach(ci => {
@@ -114,9 +124,9 @@ export class JournalComponent implements OnInit {
               }
             });
             this.answer = this.answers[this.current];
-            if (todayCheckIns.length === this.questions.length) {
-              this.submitted = true;
-            }
+            console.log('Loaded answers:', this.answers);
+            // Don't mark as submitted when just loading existing data
+            // User can still update their answers
           }
         }
       },
@@ -158,6 +168,8 @@ export class JournalComponent implements OnInit {
   selectAnswer(value: number): void {
     this.answer = value;
     this.answers[this.current] = value;
+    // Reset justSaved flag when user changes an answer
+    this.justSaved = false;
   }
 
   onSubmit(e: Event): void {
@@ -175,8 +187,12 @@ export class JournalComponent implements OnInit {
   saveAll(): void {
     if (!this.isComplete()) return;
 
+    // Normalize to start of day (midnight UTC)
+    const todayStart = new Date(this.today);
+    todayStart.setUTCHours(0, 0, 0, 0);
+
     const checkIns: CheckIn[] = this.questions.map((q, index) => ({
-      date: this.today.toISOString(),
+      date: todayStart.toISOString(),
       questionId: q.key,
       answer: this.answers[index]!
     }));
@@ -184,6 +200,7 @@ export class JournalComponent implements OnInit {
     this.checkInService.saveMultipleCheckIns(checkIns).subscribe({
       next: () => {
         this.submitted = true;
+        this.justSaved = true;
       },
       error: (err) => console.error('Error saving check-ins:', err)
     });
@@ -194,6 +211,7 @@ export class JournalComponent implements OnInit {
     this.answer = null;
     this.answers = new Array(7).fill(null);
     this.submitted = false;
+    this.justSaved = false;
     this.hasExistingData = false;
     this.today = new Date();
     this.updateLandscape();
