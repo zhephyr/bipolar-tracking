@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { JournalComponent } from './components/journal/journal.component';
 import { TrackerComponent } from './components/tracker/tracker.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { TrackerComponent } from './components/tracker/tracker.component';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgChartsModule
   ],
   bootstrap: [AppComponent]
 })
