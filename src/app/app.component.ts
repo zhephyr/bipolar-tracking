@@ -1,283 +1,114 @@
-import { Component, OnInit } from '@angular/core';
-import { CheckInService } from './services/check-in.service';
-import { CheckIn } from './models/check-in.model';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   template: `
-    <div class="landscape">
-      <div class="sky" aria-hidden="true"></div>
-      <div class="sun-track" aria-hidden="true">
-        <div class="sun" aria-hidden="true"></div>
-      </div>
-      <div class="moon" aria-hidden="true"></div>
-      <div class="stars" aria-hidden="true"></div>
-      <div class="clouds" aria-hidden="true">
-        <svg class="cloud cloud-1" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="25" cy="35" rx="20" ry="15"/>
-          <ellipse cx="45" cy="25" rx="25" ry="20"/>
-          <ellipse cx="70" cy="30" rx="20" ry="15"/>
-        </svg>
-        <svg class="cloud cloud-2" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="25" cy="35" rx="20" ry="15"/>
-          <ellipse cx="45" cy="25" rx="25" ry="20"/>
-          <ellipse cx="70" cy="30" rx="20" ry="15"/>
-        </svg>
-        <svg class="cloud cloud-3" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="25" cy="35" rx="20" ry="15"/>
-          <ellipse cx="45" cy="25" rx="25" ry="20"/>
-          <ellipse cx="70" cy="30" rx="20" ry="15"/>
-        </svg>
-      </div>
-      <div class="land"></div>
-      <div class="tree" aria-hidden="true">
-        <svg class="bush" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="25" cy="35" rx="20" ry="15"/>
-          <ellipse cx="45" cy="25" rx="25" ry="20"/>
-          <ellipse cx="70" cy="30" rx="20" ry="15"/>
-        </svg>
-      </div>
-
-      <form class="question-form" (submit)="onSubmit($event)">
-        <h1>Daily Check-In</h1>
-        <p class="question">{{ questions[current].text }}</p>
-
-        <div class="controls">
-          <label *ngFor="let v of [-3,-2,-1,0,1,2,3]">
-            <input type="radio" [name]="'answer_' + current" [value]="v" [checked]="answer === v" (change)="selectAnswer(v)" hidden> 
-            <span [class]="v > 0 ? 'positive' : v < 0 ? 'negative' : 'zero'" [class.selected]="answer === v">{{v > 0 ? '+' + v : v}}</span>
-          </label>
-        </div>
-
-        <div class="nav">
-          <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
-          <button type="button" (click)="next()" *ngIf="current < questions.length - 1">Next</button>
-          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !submitted" [disabled]="!isComplete()">Submit</button>
-          <button type="button" (click)="reset()" *ngIf="submitted">Start New Check-In</button>
-        </div>
-        <p *ngIf="submitted" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in saved!</p>
-        <div class="pagination">
-          <span *ngFor="let q of questions; let i = index" 
-                class="dot" 
-                [class.active]="i === current"
-                (click)="goToQuestion(i)"></span>
-        </div>
+    <div class="app-container">
+      <nav class="sidenav" [class.collapsed]="navCollapsed">
+        <button class="toggle-btn" (click)="navCollapsed = !navCollapsed">
+          <span *ngIf="navCollapsed">☰</span>
+          <span *ngIf="!navCollapsed">✕</span>
+        </button>
         
-        <div style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px; font-size: 12px; color: var(--text-color); text-align: center;">
-          {{answers | json}}
+        <div class="nav-content" *ngIf="!navCollapsed">
+          <a routerLink="/journal" routerLinkActive="active" class="nav-link">
+            <span class="icon">📔</span>
+            <span class="label">Journal</span>
+          </a>
+          <a routerLink="/tracker" routerLinkActive="active" class="nav-link">
+            <span class="icon">📊</span>
+            <span class="label">Tracker</span>
+          </a>
         </div>
-      </form>
+      </nav>
+      
+      <main class="main-content" [class.expanded]="navCollapsed">
+        <router-outlet></router-outlet>
+      </main>
     </div>
   `,
-  styles: []
+  styles: [`
+    .app-container {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .sidenav {
+      position: relative;
+      background: #2a2a2a;
+      border-right: 1px solid rgba(0,0,0,0.3);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+      transition: width 300ms ease-out;
+      width: 220px;
+      z-index: 1000;
+    }
+    
+    .sidenav.collapsed {
+      width: 60px;
+    }
+    
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #aaa;
+      transition: color 200ms;
+      padding: 5px;
+    }
+    
+    .toggle-btn:hover {
+      color: #fff;
+    }
+    
+    .nav-content {
+      margin-top: 80px;
+      padding: 0 10px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      margin: 8px 0;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #aaa;
+      transition: all 200ms ease-out;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .nav-link:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+    
+    .nav-link.active {
+      background: rgba(100,150,200,0.3);
+      color: #6eb3ff;
+    }
+    
+    .nav-link .icon {
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    
+    .main-content {
+      flex: 1;
+      overflow: auto;
+      transition: margin-left 300ms ease-out;
+    }
+    
+    .main-content.expanded {
+      margin-left: 0;
+    }
+  `]
 })
-export class AppComponent implements OnInit {
-  questions = [
-    { key: 'sleep_quality', text: 'How did you sleep? Quality over quantity.' },
-    { key: 'energy_level', text: 'How were your energy levels today?' },
-    { key: 'mental_clarity', text: 'How was your mental clarity?' },
-    { key: 'sensitivity', text: 'How sensitive were you today?' },
-    { key: 'impulsivity', text: 'How in-control were you today?' },
-    { key: 'self_perception', text: 'How did you feel about yourself today?' },
-    { key: 'sleep_readiness', text: 'Are you ready for bed?' }
-  ];
-
-  current = 0;
-  answer: number | null = null;
-  answers: (number | null)[] = new Array(7).fill(null);
-  submitted = false;
-  today = new Date();
-
-  constructor(private checkInService: CheckInService) {}
-
-  ngOnInit(): void {
-    this.updateLandscape();
-    this.loadTodayCheckIns();
-  }
-
-  loadTodayCheckIns(): void {
-    this.checkInService.getCheckIns(1).subscribe({
-      next: (checkIns) => {
-        if (checkIns && checkIns.length > 0) {
-          const todayCheckIns = checkIns.filter(ci => {
-            const ciDate = new Date(ci.date);
-            return ciDate.toDateString() === this.today.toDateString();
-          });
-          
-          todayCheckIns.forEach(ci => {
-            const index = this.questions.findIndex(q => q.key === ci.questionId);
-            if (index >= 0 && index < this.answers.length) {
-              this.answers[index] = ci.answer;
-            }
-          });
-          this.answer = this.answers[this.current];
-          if (todayCheckIns.length === this.questions.length) {
-            this.submitted = true;
-          }
-        }
-      },
-      error: (err) => console.error('Error loading check-ins:', err)
-    });
-  }
-
-  next(): void {
-    if (this.answer !== null) {
-      this.answers[this.current] = this.answer;
-    }
-    if (this.current < this.questions.length - 1) {
-      this.current++;
-      this.answer = this.answers[this.current];
-      this.updateLandscape();
-    }
-  }
-
-  prev(): void {
-    if (this.answer !== null) {
-      this.answers[this.current] = this.answer;
-    }
-    if (this.current > 0) {
-      this.current--;
-      this.answer = this.answers[this.current];
-      this.updateLandscape();
-    }
-  }
-
-  goToQuestion(index: number): void {
-    if (this.answer !== null) {
-      this.answers[this.current] = this.answer;
-    }
-    this.current = index;
-    this.answer = this.answers[this.current];
-    this.updateLandscape();
-  }
-
-  selectAnswer(value: number): void {
-    this.answer = value;
-    this.answers[this.current] = value;
-  }
-
-  onSubmit(e: Event): void {
-    e.preventDefault();
-    if (this.answer !== null) {
-      this.answers[this.current] = this.answer;
-    }
-    this.next();
-  }
-
-  isComplete(): boolean {
-    return this.answers.every(a => a !== null);
-  }
-
-  saveAll(): void {
-    if (!this.isComplete()) return;
-
-    const checkIns: CheckIn[] = this.questions.map((q, index) => ({
-      date: this.today.toISOString(),
-      questionId: q.key,
-      answer: this.answers[index]!
-    }));
-
-    this.checkInService.saveMultipleCheckIns(checkIns).subscribe({
-      next: () => {
-        this.submitted = true;
-      },
-      error: (err) => console.error('Error saving check-ins:', err)
-    });
-  }
-
-  reset(): void {
-    this.current = 0;
-    this.answer = null;
-    this.answers = new Array(7).fill(null);
-    this.submitted = false;
-    this.today = new Date();
-    this.updateLandscape();
-    this.loadTodayCheckIns();
-  }
-
-  updateLandscape(): void {
-    const progress = this.questions.length > 1 ? this.current / (this.questions.length - 1) : 0;
-    const sunLeft = (10 + progress * 80).toFixed(1) + '%';
-    const sunTop = ( (60 - Math.sin(Math.PI * progress) * 35) ).toFixed(1) + '%';
-
-    // Moon follows the same arc but lags 4 questions behind, making it invisible when behind the land
-    const moonProgress = (this.current - 4) / (this.questions.length - 1);
-    const moonLeft = (10 + moonProgress * 80).toFixed(1) + '%';
-    const moonTop = ( (60 - Math.sin(Math.PI * moonProgress) * 35) ).toFixed(1) + '%';
-    const moonOpacity = moonProgress >= 0 && moonProgress <= 1 ? 1 : 0;
-
-    const sky = this.interpolate(['#B8A59D','#FFE4C9','#B8D8E8','#B8D8F0','#A8C8E8','#C8B8E0','#4A5A68'], progress);
-    const land = this.interpolate(['#8B8570','#F0E8C0','#C8DDB0','#B8D8B0','#B8D8A8','#B0C8A8','#4A5A50'], progress);
-    const treeColor = this.interpolate(['#6A7A5A','#8AAA7A','#8AAA7A','#8AAA7A','#8AAA7A','#7A9A6A','#4A5A4A'], progress);
-    const bushColor = this.interpolate(['#5A6A4A','#7A9A6A','#7A9A6A','#7A9A6A','#7A9A6A','#6A8A5A','#3A4A3A'], progress);
-
-    // parse rgb string "rgb(r, g, b)" -> {r,g,b}
-    const parseRgb = (s: string) => {
-      const m = s.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-      return m ? { r: +m[1], g: +m[2], b: +m[3] } : { r: 0, g: 0, b: 0 };
-    };
-    const mix = (a: {r:number;g:number; b:number}, b: {r:number;g:number; b:number}, t: number) => {
-      return { r: Math.round(a.r + (b.r - a.r) * t), g: Math.round(a.g + (b.g - a.g) * t), b: Math.round(a.b + (b.b - a.b) * t) };
-    };
-    const toRgbString = (c: {r:number;g:number;b:number}) => `rgb(${c.r}, ${c.g}, ${c.b})`;
-
-    const skyRgb = parseRgb(sky);
-    const landRgb = parseRgb(land);
-
-    // Base mixes
-    let skyHorizonMix = 0.08;
-    let landHorizonMix = 0.20;
-    let landFrontMix = 0.12;
-
-    // Increase horizon contrast for questions 2..6 (1-based questions 2-6 => indices 1..5)
-    if (this.current >= 1 && this.current <= 5) {
-      skyHorizonMix = 0.22; // darker horizon
-      landHorizonMix = 0.36; // brighter horizon highlight
-      landFrontMix = 0.22; // deepen front shading
-    }
-
-    const skyTop = toRgbString(mix(skyRgb, { r:255, g:255, b:255 }, 0.06));
-    const skyBottom = toRgbString(mix(skyRgb, { r:0, g:0, b:0 }, 0.12));
-    const skyHorizon = toRgbString(mix(skyRgb, { r:0, g:0, b:0 }, skyHorizonMix));
-
-    const landHorizon = toRgbString(mix(landRgb, { r:255, g:255, b:255 }, landHorizonMix));
-    const landFront = toRgbString(mix(landRgb, { r:0, g:0, b:0 }, landFrontMix));
-
-    const night = Math.max(0, (progress - 0.7) / 0.3);
-    
-
-    // Set light text for question 7
-    const textColor = this.current === 6 ? 'rgba(255,255,255,0.9)' : 'rgba(90,106,122,1)';
-    const headingColor = this.current === 6 ? 'rgba(255,255,255,0.95)' : 'rgba(106,122,138,1)';
-    
-    const root = document.documentElement;
-    root.style.setProperty('--sky', sky);
-    root.style.setProperty('--land', land);
-    root.style.setProperty('--sun-left', sunLeft);
-    root.style.setProperty('--sun-top', sunTop);
-    root.style.setProperty('--moon-left', moonLeft);
-    root.style.setProperty('--moon-top', moonTop);
-    root.style.setProperty('--stars-opacity', String(night));
-    root.style.setProperty('--moon-opacity', String(moonOpacity));
-    root.style.setProperty('--text-color', textColor);
-    root.style.setProperty('--heading-color', headingColor);
-    root.style.setProperty('--tree-color', treeColor);
-    root.style.setProperty('--bush-color', bushColor);
-
-    // override gradient stop variables to increase depth when needed
-    root.style.setProperty('--sky-top', skyTop);
-    root.style.setProperty('--sky-bottom', skyBottom);
-    root.style.setProperty('--sky-horizon', skyHorizon);
-    root.style.setProperty('--land-horizon', landHorizon);
-    root.style.setProperty('--land-front', landFront);
-  }
-
-  interpolate(stages: string[], t: number): string {
-    const n = stages.length; const s = Math.min(Math.max(t*(n-1),0), n-1); const i = Math.floor(s); const f = s - i;
-    const a = this.hexToRgb(stages[i]); const b = this.hexToRgb(stages[Math.min(i+1,n-1)]);
-    const r = Math.round(a.r + (b.r-a.r)*f); const g = Math.round(a.g + (b.g-a.g)*f); const bl = Math.round(a.b + (b.b-a.b)*f);
-    return `rgb(${r}, ${g}, ${bl})`;
-  }
-
-  hexToRgb(hex: string) { const c = hex.replace('#',''); const v = parseInt(c,16); return { r:(v>>16)&255, g:(v>>8)&255, b:v&255 }; }
+export class AppComponent {
+  navCollapsed = true;
 }
