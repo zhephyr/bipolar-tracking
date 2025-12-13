@@ -1,0 +1,144 @@
+:root {
+  --sky: rgb(135, 206, 235);
+  --land: #9BCB3C;
+  --sun-left: 10%;
+  --sun-top: 50%;
+  --stars-opacity: 0;
+  --moon-opacity: 0;
+  --sky-top: color-mix(in srgb, var(--sky) 85%, white 15%);
+  --sky-bottom: color-mix(in srgb, var(--sky) 45%, black 12%);
+  --sky-horizon: color-mix(in srgb, var(--sky) 55%, black 8%);
+  --land-horizon: color-mix(in srgb, var(--land) 65%, white 20%);
+  --land-front: color-mix(in srgb, var(--land) 85%, black 12%);
+}
+
+* { box-sizing: border-box; }
+html, body, app-root { height: 100%; margin: 0; }
+body { font-family: Roboto, Arial, sans-serif; background: #fff; }
+
+.landscape {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sky {
+  position: absolute; inset: 0 0 40% 0; /* sky covers top portion */
+  /* combine a radial highlight near the sun with a soft vertical gradient for depth */
+  background:
+    radial-gradient(circle at var(--sun-left) var(--sun-top), color-mix(in srgb, var(--sky) 94%, white 6%) 0%, transparent 40%),
+    linear-gradient(to top, var(--sky-bottom) 0%, var(--sky-horizon) 45%, var(--sky-top) 100%);
+  transition: background 600ms linear, opacity 600ms linear;
+}
+
+.sun {
+  position: absolute;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,180,1), rgba(255,200,0,0.9));
+  left: var(--sun-left);
+  top: var(--sun-top);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 60px rgba(255,200,50,0.5);
+  transition: left 400ms linear, top 400ms linear, opacity 400ms linear;
+  z-index: 3;
+}
+
+/* container that constrains sun travel to a 16:9 region based on the sky height */
+.sun-track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* use full viewport height so `--sun-top` percentages match the original curve mapping */
+  height: 100vh;
+  width: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.moon {
+  position: absolute; right: 12%; top: 12%;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #cfd8dc);
+  opacity: var(--moon-opacity);
+  filter: blur(0.3px);
+  z-index: 2;
+}
+
+.stars {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: var(--stars-opacity);
+  background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 1px, transparent 2px),
+                    radial-gradient(circle at 40% 10%, rgba(255,255,255,0.8) 1px, transparent 2px),
+                    radial-gradient(circle at 70% 30%, rgba(255,255,255,0.7) 1px, transparent 2px),
+                    radial-gradient(circle at 20% 60%, rgba(255,255,255,0.6) 1px, transparent 2px);
+  background-size: 100% 100%;
+  transition: opacity 500ms linear;
+}
+
+.land {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 40%;
+  background: linear-gradient(to top, var(--land-front) 0%, var(--land) 40%, var(--land-horizon) 100%);
+  z-index: 8;
+  display: flex; align-items: flex-end; padding-left: 40px;
+  overflow: visible;
+}
+
+/* curved horizon: wide ellipse that masks the land top for a soft curve */
+.land::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -70%;
+  width: 220%;
+  height: 220%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 60%, rgba(0,0,0,0.12) 42%, rgba(255,255,255,0.02) 48%, transparent 56%);
+  pointer-events: none;
+}
+
+.tree {
+  width: 30px; height: 80px;
+  background: 
+    linear-gradient(90deg, 
+      rgba(255,255,255,calc(0.15 * clamp(0, (50% - var(--sun-left)) / 40%, 1))),
+      rgba(0,0,0,0) 50%,
+      rgba(0,0,0,calc(0.3 * clamp(0, (var(--sun-left) - 50%) / 40%, 1)))
+    ),
+    #6B4423;
+  position: absolute;
+  left: 57%;
+  transform: translateX(-50%);
+  top: 6%;
+  z-index: 6;
+  transition: background 600ms linear;
+}
+
+.tree::before {
+  content: "";
+  position: absolute;
+  width: 120px; height: 120px;
+  background: 
+    radial-gradient(circle at var(--sun-left) 30%, rgba(255,255,255,0.15) 0%, transparent 35%),
+    radial-gradient(circle at calc(100% - var(--sun-left)) 60%, rgba(0,0,0,0.2) 0%, transparent 45%),
+    radial-gradient(circle at 35% 35%, #5a8a3a, #3a5a2a);
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 75px;
+  z-index: 6;
+  transition: background 600ms linear;
+}
+
+.question-form { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(760px, 92%); background: rgba(255,255,255,0.55); padding: 18px; border-radius: 10px; border: 3px solid rgba(255,255,255,0.6); z-index: 10; box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2); }
+.question-form h1 { margin: 0 0 8px 0; font-size: 18px; }
+.question { margin: 8px 0 12px 0; }
+.controls label { margin-right: 10px; }
+.nav { margin-top: 12px; }
+.progress { font-size: 13px; color: #666; margin-top: 8px; }
+
+@media (max-width: 600px) {
+  .sun { width: 64px; height: 64px; }
+  .tree { width: 80px; height: 120px; }
+}
