@@ -43,6 +43,25 @@ public class CheckInsController : ControllerBase
             return BadRequest("QuestionId is required");
         }
 
+        // Check for existing entry for the same date and questionId
+        var dateOnly = checkIn.Date.Date;
+        var nextDay = dateOnly.AddDays(1);
+        var existingCheckIn = await _context.CheckIns
+            .FirstOrDefaultAsync(c => 
+                c.QuestionId == checkIn.QuestionId && 
+                c.Date >= dateOnly && 
+                c.Date < nextDay);
+
+        if (existingCheckIn != null)
+        {
+            // Update existing entry
+            existingCheckIn.Answer = checkIn.Answer;
+            existingCheckIn.Date = checkIn.Date;
+            await _context.SaveChangesAsync();
+            return Ok(existingCheckIn);
+        }
+
+        // Create new entry
         _context.CheckIns.Add(checkIn);
         await _context.SaveChangesAsync();
 

@@ -52,10 +52,10 @@ import { CheckIn } from '../../models/check-in.model';
         <div class="nav">
           <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
           <button type="button" (click)="next()" *ngIf="current < questions.length - 1">Next</button>
-          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !submitted" [disabled]="!isComplete()">Submit</button>
+          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !submitted" [disabled]="!isComplete()">{{hasExistingData ? 'Update' : 'Submit'}}</button>
           <button type="button" (click)="reset()" *ngIf="submitted">Start New Check-In</button>
         </div>
-        <p *ngIf="submitted" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in saved!</p>
+        <p *ngIf="submitted" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in {{hasExistingData ? 'updated' : 'saved'}}!</p>
         <div class="pagination">
           <span *ngFor="let q of questions; let i = index" 
                 class="dot" 
@@ -86,6 +86,7 @@ export class JournalComponent implements OnInit {
   answer: number | null = null;
   answers: (number | null)[] = new Array(7).fill(null);
   submitted = false;
+  hasExistingData = false;
   today = new Date();
 
   constructor(private checkInService: CheckInService) {}
@@ -104,15 +105,18 @@ export class JournalComponent implements OnInit {
             return ciDate.toDateString() === this.today.toDateString();
           });
           
-          todayCheckIns.forEach(ci => {
-            const index = this.questions.findIndex(q => q.key === ci.questionId);
-            if (index >= 0 && index < this.answers.length) {
-              this.answers[index] = ci.answer;
+          if (todayCheckIns.length > 0) {
+            this.hasExistingData = true;
+            todayCheckIns.forEach(ci => {
+              const index = this.questions.findIndex(q => q.key === ci.questionId);
+              if (index >= 0 && index < this.answers.length) {
+                this.answers[index] = ci.answer;
+              }
+            });
+            this.answer = this.answers[this.current];
+            if (todayCheckIns.length === this.questions.length) {
+              this.submitted = true;
             }
-          });
-          this.answer = this.answers[this.current];
-          if (todayCheckIns.length === this.questions.length) {
-            this.submitted = true;
           }
         }
       },
@@ -190,6 +194,7 @@ export class JournalComponent implements OnInit {
     this.answer = null;
     this.answers = new Array(7).fill(null);
     this.submitted = false;
+    this.hasExistingData = false;
     this.today = new Date();
     this.updateLandscape();
     this.loadTodayCheckIns();
