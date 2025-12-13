@@ -227,7 +227,65 @@ body { font-family: 'Nunito', 'Quicksand', 'Comfortaa', 'Varela Round', 'Rounded
 .pagination .dot:hover { background: rgba(150,160,170,0.6); transform: scale(1.2); }
 .pagination .dot.active { background: rgba(100,150,200,0.85); width: 16px; height: 16px; box-shadow: 0 2px 8px rgba(100,150,200,0.4); }
 
+/* Tablet and smaller */
+@media (max-width: 900px) {
+  .question-form { width: min(90%, 700px); padding: 32px 24px; }
+  .question-form h1 { font-size: 32px; margin-bottom: 20px; }
+  .question { font-size: 23px; margin: 18px 0 28px 0; }
+  .controls { gap: 10px; flex-wrap: wrap; }
+  .controls label { min-width: 52px; min-height: 52px; font-size: 22px; }
+  .nav button { padding: 11px 24px; font-size: 17px; }
+  .cloud-1 { width: 180px; }
+  .cloud-2 { width: 150px; }
+  .cloud-3 { width: 200px; }
+}
+
+/* Mobile landscape and smaller tablets */
+@media (max-width: 768px) {
+  .question-form { width: 92%; padding: 28px 20px; }
+  .question-form h1 { font-size: 28px; margin-bottom: 18px; }
+  .question { font-size: 21px; margin: 16px 0 24px 0; }
+  .controls { gap: 8px; }
+  .controls label { min-width: 48px; min-height: 48px; font-size: 20px; }
+  .nav { margin-top: 28px; gap: 12px; }
+  .nav button { padding: 10px 20px; font-size: 16px; }
+  .tree { width: 25px; height: 70px; }
+  .tree::before { width: 100px; height: 100px; bottom: 65px; }
+  .bush { width: 70px; }
+  .sun { width: 70px; height: 70px; }
+  .moon { width: 56px; height: 56px; }
+}
+
+/* Mobile portrait */
 @media (max-width: 600px) {
-  .sun { width: 64px; height: 64px; }
-  .tree { width: 80px; height: 120px; }
+  .question-form { width: 95%; padding: 24px 16px; }
+  .question-form h1 { font-size: 24px; margin-bottom: 16px; }
+  .question { font-size: 18px; margin: 14px 0 20px 0; line-height: 1.5; }
+  .controls { gap: 6px; }
+  .controls label { min-width: 42px; min-height: 42px; font-size: 18px; }
+  .nav { margin-top: 24px; gap: 10px; flex-direction: column; }
+  .nav button { padding: 10px 20px; font-size: 15px; width: 100%; }
+  .pagination { gap: 8px; margin-top: 16px; }
+  .pagination .dot { width: 10px; height: 10px; }
+  .pagination .dot.active { width: 14px; height: 14px; }
+  .tree { width: 22px; height: 60px; top: 58%; }
+  .tree::before { width: 90px; height: 90px; bottom: 55px; }
+  .bush { width: 60px; }
+  .sun { width: 60px; height: 60px; }
+  .moon { width: 50px; height: 50px; }
+  .cloud-1 { width: 140px; }
+  .cloud-2 { width: 120px; }
+  .cloud-3 { width: 160px; }
+}
+
+/* Very small screens */
+@media (max-width: 400px) {
+  .question-form { padding: 20px 12px; }
+  .question-form h1 { font-size: 22px; }
+  .question { font-size: 16px; margin: 12px 0 18px 0; }
+  .controls { gap: 5px; }
+  .controls label { min-width: 38px; min-height: 38px; font-size: 16px; }
+  .nav button { padding: 9px 16px; font-size: 14px; }
+  .pagination .dot { width: 8px; height: 8px; }
+  .pagination .dot.active { width: 12px; height: 12px; }
 }
