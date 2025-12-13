@@ -64,13 +64,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   questions = [
-    { key: 'wake', text: 'How did you sleep? Quality over quantity.' },
-    { key: 'sleep_quality', text: 'How were your energy levels today?' },
-    { key: 'meals', text: 'How was your mental clarity?' },
-    { key: 'activity', text: 'How sensitive were you today?' },
-    { key: 'mood', text: 'How in-control were you today?' },
-    { key: 'evening', text: 'How did you feel about yourself today?' },
-    { key: 'sleep_plan', text: 'Are you ready for bed?' }
+    { key: 'sleep_quality', text: 'How did you sleep? Quality over quantity.' },
+    { key: 'energy_level', text: 'How were your energy levels today?' },
+    { key: 'mental_clarity', text: 'How was your mental clarity?' },
+    { key: 'sensitivity', text: 'How sensitive were you today?' },
+    { key: 'impulsivity', text: 'How in-control were you today?' },
+    { key: 'self_perception', text: 'How did you feel about yourself today?' },
+    { key: 'sleep_readiness', text: 'Are you ready for bed?' }
   ];
 
   current = 0;
