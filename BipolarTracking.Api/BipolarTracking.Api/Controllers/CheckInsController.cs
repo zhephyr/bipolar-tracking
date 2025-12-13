@@ -68,4 +68,38 @@ public class CheckInsController : ControllerBase
 
         return CreatedAtAction(nameof(GetCheckIns), new { id = checkIn.Id }, checkIn);
     }
+
+    // POST: api/checkins/seed
+    [HttpPost("seed")]
+    public async Task<ActionResult> SeedData([FromQuery] int days = 30)
+    {
+        var random = new Random();
+        var questionIds = new[] { "sleep_quality", "energy_level", "mental_clarity", "sensitivity", "impulsivity", "self_perception", "sleep_readiness" };
+        
+        for (int i = 0; i < days; i++)
+        {
+            var date = DateTime.UtcNow.Date.AddDays(-i);
+            
+            foreach (var questionId in questionIds)
+            {
+                // Check if data already exists for this date/question
+                var exists = await _context.CheckIns
+                    .AnyAsync(c => c.QuestionId == questionId && c.Date.Date == date);
+                
+                if (!exists)
+                {
+                    var checkIn = new CheckIn
+                    {
+                        Date = date,
+                        QuestionId = questionId,
+                        Answer = random.Next(-3, 4) // Random value between -3 and 3
+                    };
+                    _context.CheckIns.Add(checkIn);
+                }
+            }
+        }
+        
+        await _context.SaveChangesAsync();
+        return Ok(new { message = $"Seeded data for {days} days" });
+    }
 }

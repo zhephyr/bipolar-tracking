@@ -72,12 +72,12 @@ export class TrackerComponent implements OnInit {
   overallChartData: ChartConfiguration['data'] = {
     labels: [],
     datasets: [
-      { label: 'Sleep Quality', data: [], borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0.4 },
-      { label: 'Energy Level', data: [], borderColor: '#FFCE56', backgroundColor: 'rgba(255, 206, 86, 0.2)', tension: 0.4 },
-      { label: 'Mental Clarity', data: [], borderColor: '#36A2EB', backgroundColor: 'rgba(54, 162, 235, 0.2)', tension: 0.4 },
-      { label: 'Sensitivity', data: [], borderColor: '#FF6384', backgroundColor: 'rgba(255, 99, 132, 0.2)', tension: 0.4 },
-      { label: 'Impulsivity', data: [], borderColor: '#9966FF', backgroundColor: 'rgba(153, 102, 255, 0.2)', tension: 0.4 },
-      { label: 'Self-Perception', data: [], borderColor: '#FF9F40', backgroundColor: 'rgba(255, 159, 64, 0.2)', tension: 0.4 }
+      { label: 'Sleep Quality', data: [], borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0 },
+      { label: 'Energy Level', data: [], borderColor: '#FFCE56', backgroundColor: 'rgba(255, 206, 86, 0.2)', tension: 0 },
+      { label: 'Mental Clarity', data: [], borderColor: '#36A2EB', backgroundColor: 'rgba(54, 162, 235, 0.2)', tension: 0 },
+      { label: 'Sensitivity', data: [], borderColor: '#FF6384', backgroundColor: 'rgba(255, 99, 132, 0.2)', tension: 0 },
+      { label: 'Impulsivity', data: [], borderColor: '#9966FF', backgroundColor: 'rgba(153, 102, 255, 0.2)', tension: 0 },
+      { label: 'Self-Perception', data: [], borderColor: '#FF9F40', backgroundColor: 'rgba(255, 159, 64, 0.2)', tension: 0 }
     ]
   };
 
@@ -161,21 +161,23 @@ export class TrackerComponent implements OnInit {
         this.overallChartData = {
           labels,
           datasets: [
-            { label: 'Sleep Quality', data: dataArrays[0], borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0.4 },
-            { label: 'Energy Level', data: dataArrays[1], borderColor: '#FFCE56', backgroundColor: 'rgba(255, 206, 86, 0.2)', tension: 0.4 },
-            { label: 'Mental Clarity', data: dataArrays[2], borderColor: '#36A2EB', backgroundColor: 'rgba(54, 162, 235, 0.2)', tension: 0.4 },
-            { label: 'Sensitivity', data: dataArrays[3], borderColor: '#FF6384', backgroundColor: 'rgba(255, 99, 132, 0.2)', tension: 0.4 },
-            { label: 'Impulsivity', data: dataArrays[4], borderColor: '#9966FF', backgroundColor: 'rgba(153, 102, 255, 0.2)', tension: 0.4 },
-            { label: 'Self-Perception', data: dataArrays[5], borderColor: '#FF9F40', backgroundColor: 'rgba(255, 159, 64, 0.2)', tension: 0.4 }
+            { label: 'Sleep Quality', data: dataArrays[0], borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0 },
+            { label: 'Energy Level', data: dataArrays[1], borderColor: '#FFCE56', backgroundColor: 'rgba(255, 206, 86, 0.2)', tension: 0 },
+            { label: 'Mental Clarity', data: dataArrays[2], borderColor: '#36A2EB', backgroundColor: 'rgba(54, 162, 235, 0.2)', tension: 0 },
+            { label: 'Sensitivity', data: dataArrays[3], borderColor: '#FF6384', backgroundColor: 'rgba(255, 99, 132, 0.2)', tension: 0 },
+            { label: 'Impulsivity', data: dataArrays[4], borderColor: '#9966FF', backgroundColor: 'rgba(153, 102, 255, 0.2)', tension: 0 },
+            { label: 'Self-Perception', data: dataArrays[5], borderColor: '#FF9F40', backgroundColor: 'rgba(255, 159, 64, 0.2)', tension: 0 }
           ]
         };
 
-        // Update sleep chart
+        // Update sleep chart - shift sleep_quality by one day to align with previous day's sleep_readiness
+        const shiftedSleepQuality = [null, ...dataArrays[0].slice(0, -1)];
+        
         this.sleepChartData = {
           labels,
           datasets: [
-            { label: 'Sleep Quality', data: dataArrays[0], borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0.4 },
-            { label: 'Sleep Readiness', data: dataArrays[6], borderColor: '#8E44AD', backgroundColor: 'rgba(142, 68, 173, 0.2)', tension: 0.4 }
+            { label: 'Sleep Quality (Next Day)', data: shiftedSleepQuality, borderColor: '#4BC0C0', backgroundColor: 'rgba(75, 192, 192, 0.2)', tension: 0.4 },
+            { label: 'Sleep Readiness (Previous Night)', data: dataArrays[6], borderColor: '#8E44AD', backgroundColor: 'rgba(142, 68, 173, 0.2)', tension: 0.4 }
           ]
         };
       },
