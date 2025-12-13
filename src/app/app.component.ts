@@ -28,7 +28,13 @@ import { Component, OnInit } from '@angular/core';
         </svg>
       </div>
       <div class="land"></div>
-      <div class="tree" aria-hidden="true"></div>
+      <div class="tree" aria-hidden="true">
+        <svg class="bush" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="25" cy="35" rx="20" ry="15"/>
+          <ellipse cx="45" cy="25" rx="25" ry="20"/>
+          <ellipse cx="70" cy="30" rx="20" ry="15"/>
+        </svg>
+      </div>
 
       <form class="question-form" (submit)="onSubmit($event)">
         <h1>Bipolar Tracking — Daily Check</h1>
@@ -79,8 +85,10 @@ export class AppComponent implements OnInit {
     const moonTop = ( (60 - Math.sin(Math.PI * moonProgress) * 35) ).toFixed(1) + '%';
     const moonOpacity = moonProgress >= 0 && moonProgress <= 1 ? 1 : 0;
 
-    const sky = this.interpolate(['#5C3D2E','#FFD8A8','#87CEEB','#6EC1FF','#87CEEB','#B19CD9','#0B2447'], progress);
-    const land = this.interpolate(['#3D3A28','#E6E2AF','#9BCB3C','#7BB241','#9BCB3C','#6FA34F','#2B3A25'], progress);
+    const sky = this.interpolate(['#B8A59D','#FFE4C9','#B8D8E8','#B8D8F0','#A8C8E8','#C8B8E0','#4A5A68'], progress);
+    const land = this.interpolate(['#8B8570','#F0E8C0','#C8DDB0','#B8D8B0','#B8D8A8','#B0C8A8','#4A5A50'], progress);
+    const treeColor = this.interpolate(['#6A7A5A','#8AAA7A','#8AAA7A','#8AAA7A','#8AAA7A','#7A9A6A','#4A5A4A'], progress);
+    const bushColor = this.interpolate(['#5A6A4A','#7A9A6A','#7A9A6A','#7A9A6A','#7A9A6A','#6A8A5A','#3A4A3A'], progress);
 
     // parse rgb string "rgb(r, g, b)" -> {r,g,b}
     const parseRgb = (s: string) => {
@@ -115,6 +123,12 @@ export class AppComponent implements OnInit {
     const landFront = toRgbString(mix(landRgb, { r:0, g:0, b:0 }, landFrontMix));
 
     const night = Math.max(0, (progress - 0.7) / 0.3);
+    
+
+    // Set light text for question 7
+    const textColor = this.current === 6 ? 'rgba(255,255,255,0.9)' : 'rgba(90,106,122,1)';
+    const headingColor = this.current === 6 ? 'rgba(255,255,255,0.95)' : 'rgba(106,122,138,1)';
+    
     const root = document.documentElement;
     root.style.setProperty('--sky', sky);
     root.style.setProperty('--land', land);
@@ -124,6 +138,10 @@ export class AppComponent implements OnInit {
     root.style.setProperty('--moon-top', moonTop);
     root.style.setProperty('--stars-opacity', String(night));
     root.style.setProperty('--moon-opacity', String(moonOpacity));
+    root.style.setProperty('--text-color', textColor);
+    root.style.setProperty('--heading-color', headingColor);
+    root.style.setProperty('--tree-color', treeColor);
+    root.style.setProperty('--bush-color', bushColor);
 
     // override gradient stop variables to increase depth when needed
     root.style.setProperty('--sky-top', skyTop);

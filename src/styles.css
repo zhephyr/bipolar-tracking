@@ -7,6 +7,10 @@
   --moon-top: 50%;
   --stars-opacity: 0;
   --moon-opacity: 0;
+  --text-color: rgba(90,106,122,1);
+  --heading-color: rgba(106,122,138,1);
+  --tree-color: #8AAA7A;
+  --bush-color: #7A9A6A;
   --sky-top: color-mix(in srgb, var(--sky) 85%, white 15%);
   --sky-bottom: color-mix(in srgb, var(--sky) 45%, black 12%);
   --sky-horizon: color-mix(in srgb, var(--sky) 55%, black 8%);
@@ -39,12 +43,13 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
   position: absolute;
   width: 90px; height: 90px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,180,1), rgba(255,200,0,0.9));
+  background: radial-gradient(circle at 30% 30%, rgba(255,245,200,1), rgba(255,220,150,0.95));
   left: var(--sun-left);
   top: var(--sun-top);
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 60px rgba(255,200,50,0.5);
-  transition: left 400ms linear, top 400ms linear, opacity 400ms linear;
+  box-shadow: 0 0 80px rgba(255,230,180,0.6), 0 0 40px rgba(255,240,200,0.4);
+  filter: blur(0.5px);
+  transition: left 400ms ease-out, top 400ms ease-out, opacity 400ms ease-out;
   z-index: 3;
 }
 
@@ -63,14 +68,15 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
 .moon {
   position: absolute;
   width: 64px; height: 64px; border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff, #cfd8dc);
+  background: radial-gradient(circle at 30% 30%, #FFFEF8, #E8E8E0);
   left: var(--moon-left);
   top: var(--moon-top);
   transform: translate(-50%, -50%);
   opacity: var(--moon-opacity);
-  filter: blur(0.3px);
+  filter: blur(0.5px);
+  box-shadow: 0 0 40px rgba(255,255,240,0.4), 0 0 20px rgba(255,255,250,0.3);
   z-index: 2;
-  transition: left 400ms linear, top 400ms linear, opacity 400ms linear;
+  transition: left 400ms ease-out, top 400ms ease-out, opacity 400ms ease-out;
 }
 
 .stars {
@@ -93,10 +99,10 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
 
 .cloud {
   position: absolute;
-  opacity: 0.85;
-  fill: color-mix(in srgb, var(--sky) 65%, white 35%);
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-  transition: fill 600ms linear;
+  opacity: 0.75;
+  fill: color-mix(in srgb, var(--sky) 50%, white 50%);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.08)) blur(0.3px);
+  transition: fill 600ms ease-out;
 }
 
 .cloud-1 {
@@ -161,13 +167,15 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
       rgba(0,0,0,0) 50%,
       rgba(0,0,0,calc(0.3 * clamp(0, (var(--sun-left) - 50%) / 40%, 1)))
     ),
-    #6B4423;
+    #9B7B5A;
   position: absolute;
   left: 57%;
   transform: translateX(-50%);
   top: 60%;
   z-index: 9;
-  transition: background 600ms linear;
+  border-radius: 4px;
+  transition: background 600ms ease-out;
+  overflow: visible;
 }
 
 .tree::before {
@@ -176,22 +184,38 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
   width: 120px; height: 120px;
   background: 
     radial-gradient(circle at var(--sun-left) 30%, rgba(255,255,255,0.15) 0%, transparent 35%),
-    radial-gradient(circle at calc(100% - var(--sun-left)) 60%, rgba(0,0,0,0.2) 0%, transparent 45%),
-    radial-gradient(circle at 35% 35%, #5a8a3a, #3a5a2a);
+    radial-gradient(circle at calc(100% - var(--sun-left)) 60%, rgba(0,0,0,0.15) 0%, transparent 45%),
+    var(--tree-color);
   border-radius: 50%;
   left: 50%;
   transform: translateX(-50%);
   bottom: 75px;
   z-index: 6;
-  transition: background 600ms linear;
+  filter: blur(0.3px);
+  transition: background 600ms ease-out;
+} 
+
+.bush {
+  position: absolute;
+  width: 80px;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%) scaleY(-1);
+  fill: var(--bush-color);
+  filter: blur(0.3px);
+  z-index: 10;
+  transition: fill 600ms ease-out;
 }
 
-.question-form { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(760px, 92%); background: rgba(255,255,255,0.55); padding: 18px; border-radius: 10px; border: 3px solid rgba(255,255,255,0.6); z-index: 10; box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2); }
-.question-form h1 { margin: 0 0 8px 0; font-size: 18px; }
-.question { margin: 8px 0 12px 0; }
-.controls label { margin-right: 10px; }
-.nav { margin-top: 12px; }
-.progress { font-size: 13px; color: #666; margin-top: 8px; }
+.question-form { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(760px, 92%); background: rgba(255,255,255,0.30); padding: 24px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.8); z-index: 10; box-shadow: 0 15px 50px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1); backdrop-filter: blur(8px); }
+.question-form h1 { margin: 0 0 12px 0; font-size: 20px; color: var(--heading-color); font-weight: 500; transition: color 600ms ease-out; }
+.question { margin: 12px 0 16px 0; color: var(--text-color); line-height: 1.5; transition: color 600ms ease-out; }
+.controls label { margin-right: 12px; color: var(--text-color); transition: color 600ms ease-out; }
+.nav { margin-top: 16px; }
+.nav button { padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(100,120,140,0.3); background: rgba(255,255,255,0.7); color: var(--text-color); cursor: pointer; transition: all 200ms ease-out, color 600ms ease-out; }
+.nav button:hover:not(:disabled) { background: rgba(255,255,255,0.9); border-color: rgba(100,120,140,0.5); transform: translateY(-1px); }
+.nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+.progress { font-size: 13px; color: var(--text-color); opacity: 0.7; margin-top: 12px; transition: color 600ms ease-out; }
 
 @media (max-width: 600px) {
   .sun { width: 64px; height: 64px; }
