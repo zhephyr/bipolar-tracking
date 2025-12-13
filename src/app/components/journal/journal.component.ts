@@ -61,10 +61,6 @@ import { CheckIn } from '../../models/check-in.model';
                 [class.active]="i === current"
                 (click)="goToQuestion(i)"></span>
         </div>
-        
-        <div style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px; font-size: 12px; color: var(--text-color); text-align: center;">
-          {{answers | json}}
-        </div>
       </form>
     </div>
   `,
@@ -99,7 +95,6 @@ export class JournalComponent implements OnInit {
   loadTodayCheckIns(): void {
     this.checkInService.getCheckIns(1).subscribe({
       next: (checkIns) => {
-        console.log('Loaded check-ins:', checkIns);
         if (checkIns && checkIns.length > 0) {
           // Normalize today to UTC midnight for comparison
           const todayUTC = new Date(this.today);
@@ -110,11 +105,9 @@ export class JournalComponent implements OnInit {
             const ciDate = new Date(ci.date);
             const ciDateString = ciDate.toISOString().split('T')[0];
             const isSameDay = ciDateString === todayUTCString;
-            console.log('Comparing:', ciDateString, 'with', todayUTCString, '=', isSameDay);
             return isSameDay;
           });
           
-          console.log('Today check-ins:', todayCheckIns);
           if (todayCheckIns.length > 0) {
             this.hasExistingData = true;
             todayCheckIns.forEach(ci => {
@@ -124,7 +117,6 @@ export class JournalComponent implements OnInit {
               }
             });
             this.answer = this.answers[this.current];
-            console.log('Loaded answers:', this.answers);
             // Don't mark as submitted when just loading existing data
             // User can still update their answers
           }
