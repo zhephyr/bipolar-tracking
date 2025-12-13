@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CheckInService } from './services/check-in.service';
+import { CheckIn } from './models/check-in.model';
 
 @Component({
   selector: 'app-root',
@@ -49,8 +51,11 @@ import { Component, OnInit } from '@angular/core';
 
         <div class="nav">
           <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
-          <button type="button" (click)="next()">Next</button>
+          <button type="button" (click)="next()" *ngIf="current < questions.length - 1">Next</button>
+          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !submitted" [disabled]="!isComplete()">Submit</button>
+          <button type="button" (click)="reset()" *ngIf="submitted">Start New Check-In</button>
         </div>
+        <p *ngIf="submitted" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in saved!</p>
         <div class="pagination">
           <span *ngFor="let q of questions; let i = index" 
                 class="dot" 
@@ -75,12 +80,102 @@ export class AppComponent implements OnInit {
 
   current = 0;
   answer: number | null = null;
+  answers: (number | null)[] = new Array(7).fill(null);
+  submitted = false;
+  today = new Date();
 
-  ngOnInit(): void { this.updateLandscape(); }
+  constructor(private checkInService: CheckInService) {}
 
-  next(): void { if (this.current < this.questions.length - 1) { this.current++; this.answer=null; this.updateLandscape(); } }
-  prev(): void { if (this.current > 0) { this.current--; this.answer=null; this.updateLandscape(); } }
-  onSubmit(e: Event): void { e.preventDefault(); this.next(); }
+  ngOnInit(): void {
+    this.updateLandscape();
+    this.loadTodayCheckIns();
+  }
+
+  loadTodayCheckIns(): void {
+    this.checkInService.getCheckIns(1).subscribe({
+      next: (checkIns) => {
+        if (checkIns && checkIns.length > 0) {
+          const todayCheckIns = checkIns.filter(ci => {
+            const ciDate = new Date(ci.date);
+            return ciDate.toDateString() === this.today.toDateString();
+          });
+          
+          todayCheckIns.forEach(ci => {
+            const index = this.questions.findIndex(q => q.key === ci.questionId);
+            if (index >= 0 && index < this.answers.length) {
+              this.answers[index] = ci.answer;
+            }
+          });
+          this.answer = this.answers[this.current];
+          if (todayCheckIns.length === this.questions.length) {
+            this.submitted = true;
+          }
+        }
+      },
+      error: (err) => console.error('Error loading check-ins:', err)
+    });
+  }
+
+  next(): void {
+    if (this.answer !== null) {
+      this.answers[this.current] = this.answer;
+    }
+    if (this.current < this.questions.length - 1) {
+      this.current++;
+      this.answer = this.answers[this.current];
+      this.updateLandscape();
+    }
+  }
+
+  prev(): void {
+    if (this.answer !== null) {
+      this.answers[this.current] = this.answer;
+    }
+    if (this.current > 0) {
+      this.current--;
+      this.answer = this.answers[this.current];
+      this.updateLandscape();
+    }
+  }
+
+  onSubmit(e: Event): void {
+    e.preventDefault();
+    if (this.answer !== null) {
+      this.answers[this.current] = this.answer;
+    }
+    this.next();
+  }
+
+  isComplete(): boolean {
+    return this.answers.every(a => a !== null);
+  }
+
+  saveAll(): void {
+    if (!this.isComplete()) return;
+
+    const checkIns: CheckIn[] = this.questions.map((q, index) => ({
+      date: this.today.toISOString(),
+      questionId: q.key,
+      answer: this.answers[index]!
+    }));
+
+    this.checkInService.saveMultipleCheckIns(checkIns).subscribe({
+      next: () => {
+        this.submitted = true;
+      },
+      error: (err) => console.error('Error saving check-ins:', err)
+    });
+  }
+
+  reset(): void {
+    this.current = 0;
+    this.answer = null;
+    this.answers = new Array(7).fill(null);
+    this.submitted = false;
+    this.today = new Date();
+    this.updateLandscape();
+    this.loadTodayCheckIns();
+  }
 
   updateLandscape(): void {
     const progress = this.questions.length > 1 ? this.current / (this.questions.length - 1) : 0;
