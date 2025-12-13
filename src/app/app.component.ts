@@ -37,18 +37,26 @@ import { Component, OnInit } from '@angular/core';
       </div>
 
       <form class="question-form" (submit)="onSubmit($event)">
-        <h1>Bipolar Tracking — Daily Check</h1>
+        <h1>Daily Check-In</h1>
         <p class="question">{{ questions[current].text }}</p>
 
         <div class="controls">
-          <label *ngFor="let v of [1,2,3,4,5]"><input type="radio" name="answer" [value]="v" (change)="answer=v"> {{v}}</label>
+          <label *ngFor="let v of [-3,-2,-1,0,1,2,3]">
+            <input type="radio" name="answer" [value]="v" (change)="answer=v" hidden> 
+            <span [class]="v > 0 ? 'positive' : v < 0 ? 'negative' : 'zero'">{{v > 0 ? '+' + v : v}}</span>
+          </label>
         </div>
 
         <div class="nav">
           <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
           <button type="button" (click)="next()">Next</button>
         </div>
-        <p class="progress">Question {{ current + 1 }} / {{ questions.length }}</p>
+        <div class="pagination">
+          <span *ngFor="let q of questions; let i = index" 
+                class="dot" 
+                [class.active]="i === current"
+                (click)="current = i; answer = null; updateLandscape()"></span>
+        </div>
       </form>
     </div>
   `,
@@ -56,13 +64,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   questions = [
-    { key: 'wake', text: 'What time did you wake up?' },
-    { key: 'sleep_quality', text: 'How was your sleep quality?' },
-    { key: 'meals', text: 'Did you eat regular meals today?' },
-    { key: 'activity', text: 'How active were you today?' },
-    { key: 'mood', text: 'How would you rate your mood today?' },
-    { key: 'evening', text: 'How did you spend your evening?' },
-    { key: 'sleep_plan', text: 'Do you have a sleep plan for tonight?' }
+    { key: 'wake', text: 'How did you sleep? Quality over quantity.' },
+    { key: 'sleep_quality', text: 'How were your energy levels today?' },
+    { key: 'meals', text: 'How was your mental clarity?' },
+    { key: 'activity', text: 'How sensitive were you today?' },
+    { key: 'mood', text: 'How in-control were you today?' },
+    { key: 'evening', text: 'How did you feel about yourself today?' },
+    { key: 'sleep_plan', text: 'Are you ready for bed?' }
   ];
 
   current = 0;

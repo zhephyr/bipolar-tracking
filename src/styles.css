@@ -20,7 +20,7 @@
 
 * { box-sizing: border-box; }
 html, body, app-root { height: 100%; margin: 0; }
-body { font-family: Roboto, Arial, sans-serif; background: #fff; }
+body { font-family: 'Nunito', 'Quicksand', 'Comfortaa', 'Varela Round', 'Rounded Mplus 1c', 'Poppins', sans-serif; background: #fff; }
 
 .landscape {
   position: relative;
@@ -207,15 +207,25 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
   transition: fill 600ms ease-out;
 }
 
-.question-form { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(760px, 92%); background: rgba(255,255,255,0.30); padding: 24px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.8); z-index: 10; box-shadow: 0 15px 50px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1); backdrop-filter: blur(8px); }
-.question-form h1 { margin: 0 0 12px 0; font-size: 20px; color: var(--heading-color); font-weight: 500; transition: color 600ms ease-out; }
-.question { margin: 12px 0 16px 0; color: var(--text-color); line-height: 1.5; transition: color 600ms ease-out; }
-.controls label { margin-right: 12px; color: var(--text-color); transition: color 600ms ease-out; }
-.nav { margin-top: 16px; }
-.nav button { padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(100,120,140,0.3); background: rgba(255,255,255,0.7); color: var(--text-color); cursor: pointer; transition: all 200ms ease-out, color 600ms ease-out; }
+.question-form { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(820px, 94%); background: rgba(255,255,255,0.30); padding: 40px 32px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.8); z-index: 10; box-shadow: 0 15px 50px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1); backdrop-filter: blur(8px); text-align: center; }
+.question-form h1 { margin: 0 0 24px 0; font-size: 36px; color: var(--heading-color); font-weight: 600; transition: color 600ms ease-out; }
+.question { margin: 20px 0 32px 0; color: var(--text-color); line-height: 1.6; font-size: 26px; transition: color 600ms ease-out; }
+.controls { display: flex; justify-content: center; gap: 12px; }
+.controls label { margin: 0; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 56px; min-height: 56px; border-radius: 12px; background: rgba(255,255,255,0.5); border: 2px solid rgba(150,150,150,0.3); transition: all 200ms ease-out; }
+.controls label:hover { background: rgba(255,255,255,0.75); border-color: rgba(150,150,150,0.5); transform: translateY(-2px); }
+.controls input:checked + span { transform: scale(1.1); }
+.controls label:has(input:checked) { background: rgba(180,220,240,0.7); border-width: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.controls .positive { color: #88C888; font-weight: 600; }
+.controls .negative { color: #E88888; font-weight: 600; }
+.controls .zero { color: #4A4A4A; font-weight: 600; }
+.nav { margin-top: 32px; display: flex; justify-content: center; gap: 16px; }
+.nav button { padding: 12px 28px; border-radius: 12px; border: 1px solid rgba(100,120,140,0.3); background: rgba(255,255,255,0.7); color: var(--text-color); cursor: pointer; font-size: 18px; font-weight: 500; transition: all 200ms ease-out, color 600ms ease-out; }
 .nav button:hover:not(:disabled) { background: rgba(255,255,255,0.9); border-color: rgba(100,120,140,0.5); transform: translateY(-1px); }
 .nav button:disabled { opacity: 0.4; cursor: not-allowed; }
-.progress { font-size: 13px; color: var(--text-color); opacity: 0.7; margin-top: 12px; transition: color 600ms ease-out; }
+.pagination { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 20px; }
+.pagination .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(150,160,170,0.4); cursor: pointer; transition: all 250ms ease-out; }
+.pagination .dot:hover { background: rgba(150,160,170,0.6); transform: scale(1.2); }
+.pagination .dot.active { background: rgba(100,150,200,0.85); width: 16px; height: 16px; box-shadow: 0 2px 8px rgba(100,150,200,0.4); }
 
 @media (max-width: 600px) {
   .sun { width: 64px; height: 64px; }
