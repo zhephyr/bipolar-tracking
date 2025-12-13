@@ -26,12 +26,13 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
 }
 
 .sky {
-  position: absolute; inset: 0 0 40% 0; /* sky covers top portion */
+  position: absolute; inset: 0; /* covers entire viewport */
   /* combine a radial highlight near the sun with a soft vertical gradient for depth */
   background:
     radial-gradient(circle at var(--sun-left) var(--sun-top), color-mix(in srgb, var(--sky) 94%, white 6%) 0%, transparent 40%),
     linear-gradient(to top, var(--sky-bottom) 0%, var(--sky-horizon) 45%, var(--sky-top) 100%);
   transition: background 600ms linear, opacity 600ms linear;
+  z-index: 1;
 }
 
 .sun {
@@ -82,12 +83,60 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
   transition: opacity 500ms linear;
 }
 
+.clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  opacity: 0.85;
+  fill: color-mix(in srgb, var(--sky) 65%, white 35%);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  transition: fill 600ms linear;
+}
+
+.cloud-1 {
+  width: 200px;
+  top: 15%;
+  left: -200px;
+  animation: drift 180s linear infinite;
+}
+
+.cloud-2 {
+  width: 165px;
+  top: 25%;
+  left: -180px;
+  animation: drift 220s linear infinite;
+  animation-delay: -80s;
+}
+
+.cloud-3 {
+  width: 230px;
+  top: 8%;
+  left: -250px;
+  animation: drift 200s linear infinite;
+  animation-delay: -140s;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(100vw + 300px));
+  }
+}
+
 .land {
   position: absolute; left: 0; right: 0; bottom: 0; height: 40%;
   background: linear-gradient(to top, var(--land-front) 0%, var(--land) 40%, var(--land-horizon) 100%);
   z-index: 8;
   display: flex; align-items: flex-end; padding-left: 40px;
-  overflow: visible;
+  clip-path: polygon(0 100%, 0 30%, 5% 25%, 10% 22%, 15% 20%, 20% 18%, 25% 16%, 30% 15%, 35% 14%, 40% 13%, 45% 12%, 50% 12%, 55% 13%, 60% 14%, 65% 15%, 70% 16%, 75% 18%, 80% 20%, 85% 22%, 90% 25%, 95% 30%, 100% 35%, 100% 100%);
 }
 
 /* curved horizon: wide ellipse that masks the land top for a soft curve */
@@ -116,8 +165,8 @@ body { font-family: Roboto, Arial, sans-serif; background: #fff; }
   position: absolute;
   left: 57%;
   transform: translateX(-50%);
-  top: 6%;
-  z-index: 6;
+  top: 60%;
+  z-index: 9;
   transition: background 600ms linear;
 }
 
