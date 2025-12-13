@@ -215,6 +215,8 @@ body { font-family: 'Nunito', 'Quicksand', 'Comfortaa', 'Varela Round', 'Rounded
 .controls label:hover { background: rgba(255,255,255,0.75); border-color: rgba(150,150,150,0.5); transform: translateY(-2px); }
 .controls input:checked + span { transform: scale(1.1); }
 .controls label:has(input:checked) { background: rgba(180,220,240,0.7); border-width: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.controls span.selected { transform: scale(1.1); }
+.controls label:has(span.selected) { background: rgba(180,220,240,0.7); border-width: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 .controls .positive { color: #88C888; font-weight: 600; }
 .controls .negative { color: #E88888; font-weight: 600; }
 .controls .zero { color: #4A4A4A; font-weight: 600; }

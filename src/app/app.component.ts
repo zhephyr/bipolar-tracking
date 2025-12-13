@@ -44,8 +44,8 @@ import { CheckIn } from './models/check-in.model';
 
         <div class="controls">
           <label *ngFor="let v of [-3,-2,-1,0,1,2,3]">
-            <input type="radio" name="answer" [value]="v" (change)="answer=v" hidden> 
-            <span [class]="v > 0 ? 'positive' : v < 0 ? 'negative' : 'zero'">{{v > 0 ? '+' + v : v}}</span>
+            <input type="radio" [name]="'answer_' + current" [value]="v" [checked]="answer === v" (change)="selectAnswer(v)" hidden> 
+            <span [class]="v > 0 ? 'positive' : v < 0 ? 'negative' : 'zero'" [class.selected]="answer === v">{{v > 0 ? '+' + v : v}}</span>
           </label>
         </div>
 
@@ -60,7 +60,11 @@ import { CheckIn } from './models/check-in.model';
           <span *ngFor="let q of questions; let i = index" 
                 class="dot" 
                 [class.active]="i === current"
-                (click)="current = i; answer = null; updateLandscape()"></span>
+                (click)="goToQuestion(i)"></span>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.1); border-radius: 8px; font-size: 12px; color: var(--text-color); text-align: center;">
+          {{answers | json}}
         </div>
       </form>
     </div>
@@ -136,6 +140,20 @@ export class AppComponent implements OnInit {
       this.answer = this.answers[this.current];
       this.updateLandscape();
     }
+  }
+
+  goToQuestion(index: number): void {
+    if (this.answer !== null) {
+      this.answers[this.current] = this.answer;
+    }
+    this.current = index;
+    this.answer = this.answers[this.current];
+    this.updateLandscape();
+  }
+
+  selectAnswer(value: number): void {
+    this.answer = value;
+    this.answers[this.current] = value;
   }
 
   onSubmit(e: Event): void {
