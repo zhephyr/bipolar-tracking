@@ -31,11 +31,14 @@ export class LandscapeComponent implements OnInit, OnChanges {
         const sunLeft = sunLeftNum.toFixed(1) + '%';
         const sunTop = (75 - Math.sin(Math.PI * progress) * 55).toFixed(1) + '%';
 
-        // Moon Path: starts rising at progress 0.3 and arcs higher
+        // Moon Path: starts rising at progress 0.3 and arcs up to the peak (left 50%)
         const moonProgress = Math.max(0, (progress - 0.3) / 0.7);
-        const moonLeftNum = 10 + moonProgress * 100;
+        // Map moon progress 0->1 to position 10% -> 50%
+        const moonLeftNum = 10 + moonProgress * 40;
         const moonLeft = moonLeftNum.toFixed(1) + '%';
-        const moonTop = (75 - Math.sin(Math.PI * moonProgress) * 55).toFixed(1) + '%';
+        // Map moon top to an arc that peaks when moonProgress is 1
+        // We use Math.sin(Math.PI/2 * moonProgress) so it only travels 90 degrees of the sine wave
+        const moonTop = (75 - Math.sin((Math.PI / 2) * moonProgress) * 55).toFixed(1) + '%';
         const moonOpacity = progress > 0.2 ? 1 : 0;
 
         // Dynamic lighting/shadow variables based on dominant light source
