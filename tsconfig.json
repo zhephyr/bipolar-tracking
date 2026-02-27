@@ -3,7 +3,8 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "importHelpers": true,
@@ -13,7 +14,10 @@
     "paths": {},
     "outDir": "./dist"
   },
-  "angularCompilerOptions": {
-    "enableIvy": true
-  }
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/test-setup.ts",
+    "src/test-providers.ts"
+  ],
+  "angularCompilerOptions": {}
 }

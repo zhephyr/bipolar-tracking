@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,27 +8,33 @@ import { Component } from '@angular/core';
     <div class="app-container">
       <nav class="sidenav" [class.collapsed]="navCollapsed">
         <button class="toggle-btn" (click)="navCollapsed = !navCollapsed">
-          <span *ngIf="navCollapsed">☰</span>
-          <span *ngIf="!navCollapsed">✕</span>
+          @if (navCollapsed) {
+            <span>☰</span>
+          }
+          @if (!navCollapsed) {
+            <span>✕</span>
+          }
         </button>
-        
-        <div class="nav-content" *ngIf="!navCollapsed">
-          <a routerLink="/journal" routerLinkActive="active" class="nav-link">
-            <span class="icon">📔</span>
-            <span class="label">Journal</span>
-          </a>
-          <a routerLink="/tracker" routerLinkActive="active" class="nav-link">
-            <span class="icon">📊</span>
-            <span class="label">Tracker</span>
-          </a>
-        </div>
+    
+        @if (!navCollapsed) {
+          <div class="nav-content">
+            <a routerLink="/journal" routerLinkActive="active" class="nav-link">
+              <span class="icon">📔</span>
+              <span class="label">Journal</span>
+            </a>
+            <a routerLink="/tracker" routerLinkActive="active" class="nav-link">
+              <span class="icon">📊</span>
+              <span class="label">Tracker</span>
+            </a>
+          </div>
+        }
       </nav>
-      
+    
       <main class="main-content" [class.expanded]="navCollapsed">
         <router-outlet></router-outlet>
       </main>
     </div>
-  `,
+    `,
   styles: [`
     .app-container {
       display: flex;
@@ -107,7 +115,9 @@ import { Component } from '@angular/core';
     .main-content.expanded {
       margin-left: 0;
     }
-  `]
+  `],
+  imports: [CommonModule, RouterModule],
+  standalone: true
 })
 export class AppComponent {
   navCollapsed = true;

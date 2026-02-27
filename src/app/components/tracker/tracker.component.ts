@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CheckInService } from '../../services/check-in.service';
 import { CheckIn } from '../../models/check-in.model';
 import { ChartConfiguration } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'app-tracker',
@@ -66,7 +68,9 @@ import { ChartConfiguration } from 'chart.js';
       padding: 20px;
       border-radius: 8px;
     }
-  `]
+  `],
+  imports: [CommonModule, BaseChartDirective],
+  standalone: true
 })
 export class TrackerComponent implements OnInit {
   overallChartData: ChartConfiguration['data'] = {
@@ -122,7 +126,7 @@ export class TrackerComponent implements OnInit {
     }
   };
 
-  constructor(private checkInService: CheckInService) {}
+  constructor(private checkInService: CheckInService) { }
 
   ngOnInit(): void {
     this.loadChartData();
@@ -135,7 +139,7 @@ export class TrackerComponent implements OnInit {
 
         // Group check-ins by date
         const dataByDate = new Map<string, Map<string, number>>();
-        
+
         checkIns.forEach(ci => {
           const date = new Date(ci.date).toISOString().split('T')[0];
           if (!dataByDate.has(date)) {
@@ -153,7 +157,7 @@ export class TrackerComponent implements OnInit {
 
         // Extract data for each metric
         const questionKeys = ['sleep_quality', 'energy_level', 'mental_clarity', 'sensitivity', 'impulsivity', 'self_perception', 'sleep_readiness'];
-        const dataArrays = questionKeys.map(key => 
+        const dataArrays = questionKeys.map(key =>
           sortedDates.map(date => dataByDate.get(date)?.get(key) ?? null)
         );
 
@@ -172,7 +176,7 @@ export class TrackerComponent implements OnInit {
 
         // Update sleep chart - shift sleep_quality by one day to align with previous day's sleep_readiness
         const shiftedSleepQuality = [null, ...dataArrays[0].slice(0, -1)];
-        
+
         this.sleepChartData = {
           labels,
           datasets: [

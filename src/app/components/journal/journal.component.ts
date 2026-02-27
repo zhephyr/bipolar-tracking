@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CheckInService } from '../../services/check-in.service';
 import { CheckIn } from '../../models/check-in.model';
 
@@ -37,34 +38,46 @@ import { CheckIn } from '../../models/check-in.model';
           <ellipse cx="70" cy="30" rx="20" ry="15"/>
         </svg>
       </div>
-
+    
       <form class="question-form" (submit)="onSubmit($event)">
         <h1>Daily Check-In</h1>
         <p class="question">{{ questions[current].text }}</p>
-
+    
         <div class="controls">
-          <label *ngFor="let v of [-3,-2,-1,0,1,2,3]">
-            <input type="radio" [name]="'answer_' + current" [value]="v" [checked]="answer === v" (change)="selectAnswer(v)" hidden> 
-            <span [class]="v > 0 ? 'positive' : v < 0 ? 'negative' : 'zero'" [class.selected]="answer === v">{{v > 0 ? '+' + v : v}}</span>
-          </label>
+          @for (v of [-3,-2,-1,0,1,2,3]; track v) {
+            <label>
+              <input type="radio" [name]="'answer_' + current" [value]="v" [checked]="answer === v" (change)="selectAnswer(v)" hidden>
+              <span [class]="v > 0 ? 'positive' : v < 0 ? 'negative' : 'zero'" [class.selected]="answer === v">{{v > 0 ? '+' + v : v}}</span>
+            </label>
+          }
         </div>
-
+    
         <div class="nav">
           <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
-          <button type="button" (click)="next()" *ngIf="current < questions.length - 1">Next</button>
-          <button type="button" (click)="saveAll()" *ngIf="current === questions.length - 1 && !justSaved" [disabled]="!isComplete()">{{hasExistingData ? 'Update' : 'Submit'}}</button>
+          @if (current < questions.length - 1) {
+            <button type="button" (click)="next()">Next</button>
+          }
+          @if (current === questions.length - 1 && !justSaved) {
+            <button type="button" (click)="saveAll()" [disabled]="!isComplete()">{{hasExistingData ? 'Update' : 'Submit'}}</button>
+          }
         </div>
-        <p *ngIf="justSaved" style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in {{hasExistingData ? 'updated' : 'saved'}}!</p>
+        @if (justSaved) {
+          <p style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in {{hasExistingData ? 'updated' : 'saved'}}!</p>
+        }
         <div class="pagination">
-          <span *ngFor="let q of questions; let i = index" 
-                class="dot" 
-                [class.active]="i === current"
-                (click)="goToQuestion(i)"></span>
+          @for (q of questions; track q; let i = $index) {
+            <span
+              class="dot"
+              [class.active]="i === current"
+            (click)="goToQuestion(i)"></span>
+          }
         </div>
       </form>
     </div>
-  `,
-  styles: []
+    `,
+  styles: [],
+  imports: [CommonModule],
+  standalone: true
 })
 export class JournalComponent implements OnInit {
   questions = [
