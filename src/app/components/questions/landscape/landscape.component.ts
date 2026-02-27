@@ -26,19 +26,28 @@ export class LandscapeComponent implements OnInit, OnChanges {
     updateLandscape(): void {
         const progress = this.progress;
 
-        // We adjust sun and moon position calculations from the original code
-        // The original code used a sun-left of 10% to 90% based on progress
-        const sunLeft = (10 + progress * 80).toFixed(1) + '%';
-        const sunTop = ((60 - Math.sin(Math.PI * progress) * 35)).toFixed(1) + '%';
+        // Sun Path: expands from -10% to 110% to ensure it fully sets below the horizon
+        const sunLeftNum = -10 + progress * 120;
+        const sunLeft = sunLeftNum.toFixed(1) + '%';
+        const sunTop = (75 - Math.sin(Math.PI * progress) * 55).toFixed(1) + '%';
 
-        // Original moon calculation: (current - 4) / (questions.length - 1)
-        // Here we can map progress to moon progress. If progress is 0.66 (4/6), moon starts showing
-        // We can assume 7 questions max for now, so progress 0 -> 0, 1 -> 6/6
-        // Moon appears on questions 4, 5, 6 -> progess >= 4/6
-        const moonProgress = (progress * 6 - 4) / 6;
-        const moonLeft = (10 + moonProgress * 80).toFixed(1) + '%';
-        const moonTop = ((60 - Math.sin(Math.PI * moonProgress) * 35)).toFixed(1) + '%';
-        const moonOpacity = moonProgress >= 0 && moonProgress <= 1 ? 1 : 0;
+        // Moon Path: starts rising at progress 0.3 and arcs higher
+        const moonProgress = Math.max(0, (progress - 0.3) / 0.7);
+        const moonLeftNum = 10 + moonProgress * 100;
+        const moonLeft = moonLeftNum.toFixed(1) + '%';
+        const moonTop = (75 - Math.sin(Math.PI * moonProgress) * 55).toFixed(1) + '%';
+        const moonOpacity = progress > 0.2 ? 1 : 0;
+
+        // Dynamic lighting/shadow variables based on dominant light source
+        let litXNum = 50;
+        let shadowXNum = 0;
+        if (progress < 0.6) {
+            litXNum = Math.max(0, Math.min(100, sunLeftNum));
+            shadowXNum = (50 - sunLeftNum) * 0.4; // Sun left = shadow right
+        } else {
+            litXNum = Math.max(0, Math.min(100, moonLeftNum));
+            shadowXNum = (50 - moonLeftNum) * 0.3; // Softer shadow for moon
+        }
 
         const sky = this.interpolate(['#2A1D3A', '#DE7A52', '#83B6E8', '#5CA3E6', '#E48855', '#4A2B42', '#0A0F1A'], progress);
         const land = this.interpolate(['#1A251A', '#5A6B5A', '#71B954', '#5C9A44', '#4A7A3A', '#1E2A1E', '#0A100A'], progress);
@@ -94,6 +103,8 @@ export class LandscapeComponent implements OnInit, OnChanges {
         root.style.setProperty('--moon-top', moonTop);
         root.style.setProperty('--stars-opacity', String(night));
         root.style.setProperty('--moon-opacity', String(moonOpacity));
+        root.style.setProperty('--lit-x', litXNum.toFixed(1) + '%');
+        root.style.setProperty('--shadow-x', shadowXNum.toFixed(1) + 'px');
 
         // We map text, bg colors via custom properties so they can be inherited by the parent
         // However, it's safer to apply text colors to document element to style the body/form properly,

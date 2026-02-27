@@ -55,14 +55,14 @@ describe('LandscapeComponent', () => {
     });
 
     it('should correctly calculate sun position', () => {
-        // 0 progress -> sun is at 10%
+        // 0 progress -> sun is at -10% (setting below horizon on start)
         component.progress = 0;
         component.updateLandscape();
-        expect(fixture.nativeElement.style.getPropertyValue('--sun-left')).toBe('10.0%');
+        expect(fixture.nativeElement.style.getPropertyValue('--sun-left')).toBe('-10.0%');
 
-        // 1 progress -> sun is at 90%
+        // 1 progress -> sun is at 110% (fully set on the other side)
         component.progress = 1;
         component.updateLandscape();
-        expect(fixture.nativeElement.style.getPropertyValue('--sun-left')).toBe('90.0%');
+        expect(fixture.nativeElement.style.getPropertyValue('--sun-left')).toBe('110.0%');
     });
 });
