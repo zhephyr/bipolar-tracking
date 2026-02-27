@@ -43,13 +43,7 @@ export class LandscapeComponent implements OnInit, OnChanges {
         const sky = this.interpolate(['#2A1D3A', '#DE7A52', '#83B6E8', '#5CA3E6', '#E48855', '#4A2B42', '#0A0F1A'], progress);
         const land = this.interpolate(['#1A251A', '#5A6B5A', '#71B954', '#5C9A44', '#4A7A3A', '#1E2A1E', '#0A100A'], progress);
         const treeColor = this.interpolate(['#1E2C1A', '#4C6440', '#5c8449', '#5c8449', '#4C6440', '#1E2C1A', '#0F180F'], progress);
-        const treeColorLight = this.interpolate(['#2E4022', '#6C8C58', '#7cb95e', '#7cb95e', '#6C8C58', '#2E4022', '#182210'], progress);
-        const treeColorDark = this.interpolate(['#111A0F', '#2E4026', '#3d5e2f', '#3d5e2f', '#2E4026', '#111A0F', '#080E06'], progress);
-        const treeTrunk = this.interpolate(['#2a1a0a', '#5a4020', '#6c5236', '#6c5236', '#5a4020', '#2a1a0a', '#160c04'], progress);
-        const treeTrunkDark = this.interpolate(['#1a0e05', '#3d2b18', '#3d2b18', '#3d2b18', '#3d2b18', '#1a0e05', '#0d0602'], progress);
-        const treeTrunkLight = this.interpolate(['#3a2510', '#7a5e38', '#8a6a48', '#8a6a48', '#7a5e38', '#3a2510', '#1c1008'], progress);
-        // Legacy bush colour kept for any remaining consumers
-        const bushColor = treeColorDark;
+        const bushColor = this.interpolate(['#182314', '#3C5430', '#4c6e3b', '#4c6e3b', '#3C5430', '#182314', '#0A120A'], progress);
 
         const questionBg = this.interpolate(['#1E2428', '#FFF0E0', '#f4efdf', '#f4efdf', '#FFF0E0', '#221D28', '#0E1114'], progress);
         const textColor = this.interpolate(['#E0E5EA', '#5A6A7A', '#3b4249', '#3b4249', '#5A6A7A', '#D0D5DA', '#EAEFF4'], progress);
@@ -112,11 +106,6 @@ export class LandscapeComponent implements OnInit, OnChanges {
         docRoot.style.setProperty('--heading-color', headingColor);
         docRoot.style.setProperty('--question-bg', questionBg);
         docRoot.style.setProperty('--tree-color', treeColor);
-        docRoot.style.setProperty('--tree-color-light', treeColorLight);
-        docRoot.style.setProperty('--tree-color-dark', treeColorDark);
-        docRoot.style.setProperty('--tree-trunk', treeTrunk);
-        docRoot.style.setProperty('--tree-trunk-dark', treeTrunkDark);
-        docRoot.style.setProperty('--tree-trunk-light', treeTrunkLight);
         docRoot.style.setProperty('--bush-color', bushColor);
 
         docRoot.style.setProperty('--sky-top', skyTop);

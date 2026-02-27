@@ -160,22 +160,49 @@
   pointer-events: none;
 }
 
-/* Full SVG tree — positioned right-of-center, partially overlapping the modal */
-.tree-svg {
+.tree {
+  width: 30px;
+  height: 80px;
+  background: var(--tree-trunk, #6c5236);
   position: absolute;
-  /* width drives height via viewBox 160:300 ratio                 */
-  width: 180px;
-  /* pin the bottom of the SVG exactly to the land horizon          */
-  bottom: 38%;
   left: 78%;
   transform: translateX(-50%);
+  top: 75%;
   z-index: 11;
+  border-radius: 0;
+  transition: background 600ms ease-out;
   overflow: visible;
-  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.35));
-  transition: filter 600ms ease-out;
+  filter: url(#torn) drop-shadow(0px -1px 4px rgba(0, 0, 0, 0.2));
 }
 
-/* Tablet */
+.tree::before {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: var(--tree-color, #5c8449);
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 75px;
+  z-index: 6;
+  filter: url(#torn) drop-shadow(0px -1px 3px rgba(0, 0, 0, 0.15));
+  transition: background 600ms ease-out;
+}
+
+.bush {
+  position: absolute;
+  width: 80px;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%) scaleY(-1);
+  fill: var(--bush-color, #4c6e3b);
+  filter: url(#torn) drop-shadow(0px -2px 3px rgba(0, 0, 0, 0.2));
+  z-index: 10;
+  transition: fill 600ms ease-out;
+}
+
+/* Tablet and smaller */
 @media (max-width: 900px) {
   .cloud-1 {
     width: 180px;
@@ -190,10 +217,21 @@
   }
 }
 
-/* Mobile landscape */
+/* Mobile landscape and smaller tablets */
 @media (max-width: 768px) {
-  .tree-svg {
-    width: 140px;
+  .tree {
+    width: 25px;
+    height: 70px;
+  }
+
+  .tree::before {
+    width: 100px;
+    height: 100px;
+    bottom: 65px;
+  }
+
+  .bush {
+    width: 70px;
   }
 
   .sun {
@@ -209,9 +247,20 @@
 
 /* Mobile portrait */
 @media (max-width: 600px) {
-  .tree-svg {
-    width: 110px;
-    bottom: 36%;
+  .tree {
+    width: 22px;
+    height: 60px;
+    top: 58%;
+  }
+
+  .tree::before {
+    width: 90px;
+    height: 90px;
+    bottom: 55px;
+  }
+
+  .bush {
+    width: 60px;
   }
 
   .sun {
