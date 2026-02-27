@@ -2,7 +2,6 @@
   display: block;
   position: absolute;
   inset: 0;
-  z-index: 1; /* Place it behind the form */
 }
 
 .landscape {
@@ -166,10 +165,10 @@
   height: 80px;
   background: var(--tree-trunk, #6c5236);
   position: absolute;
-  left: 57%;
+  left: 78%;
   transform: translateX(-50%);
-  top: 60%;
-  z-index: 9;
+  top: 75%;
+  z-index: 11;
   border-radius: 0;
   transition: background 600ms ease-out;
   overflow: visible;
@@ -205,28 +204,84 @@
 
 /* Tablet and smaller */
 @media (max-width: 900px) {
-  .cloud-1 { width: 180px; }
-  .cloud-2 { width: 150px; }
-  .cloud-3 { width: 200px; }
+  .cloud-1 {
+    width: 180px;
+  }
+
+  .cloud-2 {
+    width: 150px;
+  }
+
+  .cloud-3 {
+    width: 200px;
+  }
 }
 
 /* Mobile landscape and smaller tablets */
 @media (max-width: 768px) {
-  .tree { width: 25px; height: 70px; }
-  .tree::before { width: 100px; height: 100px; bottom: 65px; }
-  .bush { width: 70px; }
-  .sun { width: 70px; height: 70px; }
-  .moon { width: 56px; height: 56px; }
+  .tree {
+    width: 25px;
+    height: 70px;
+  }
+
+  .tree::before {
+    width: 100px;
+    height: 100px;
+    bottom: 65px;
+  }
+
+  .bush {
+    width: 70px;
+  }
+
+  .sun {
+    width: 70px;
+    height: 70px;
+  }
+
+  .moon {
+    width: 56px;
+    height: 56px;
+  }
 }
 
 /* Mobile portrait */
 @media (max-width: 600px) {
-  .tree { width: 22px; height: 60px; top: 58%; }
-  .tree::before { width: 90px; height: 90px; bottom: 55px; }
-  .bush { width: 60px; }
-  .sun { width: 60px; height: 60px; }
-  .moon { width: 50px; height: 50px; }
-  .cloud-1 { width: 140px; }
-  .cloud-2 { width: 120px; }
-  .cloud-3 { width: 160px; }
+  .tree {
+    width: 22px;
+    height: 60px;
+    top: 58%;
+  }
+
+  .tree::before {
+    width: 90px;
+    height: 90px;
+    bottom: 55px;
+  }
+
+  .bush {
+    width: 60px;
+  }
+
+  .sun {
+    width: 60px;
+    height: 60px;
+  }
+
+  .moon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .cloud-1 {
+    width: 140px;
+  }
+
+  .cloud-2 {
+    width: 120px;
+  }
+
+  .cloud-3 {
+    width: 160px;
+  }
 }
