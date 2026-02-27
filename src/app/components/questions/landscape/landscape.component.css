@@ -1,0 +1,232 @@
+:host {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* Place it behind the form */
+}
+
+.landscape {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  /* covers entire viewport */
+  background: var(--sky, #83b6e8);
+  transition: background 600ms linear, opacity 600ms linear;
+  z-index: 1;
+}
+
+.sun {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #fbd638;
+  /* Matte yellow */
+  left: var(--sun-left, 10%);
+  top: var(--sun-top, 50%);
+  transform: translate(-50%, -50%);
+  filter: url(#torn) drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
+  transition: left 400ms ease-out, top 400ms ease-out, opacity 400ms ease-out;
+  z-index: 3;
+}
+
+/* container that constrains sun travel to a 16:9 region based on the sky height */
+.sun-track {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* use full viewport height so `--sun-top` percentages match the original curve mapping */
+  height: 100vh;
+  width: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.moon {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fdfdfd;
+  /* Matte white */
+  left: var(--moon-left, 90%);
+  top: var(--moon-top, 50%);
+  transform: translate(-50%, -50%);
+  opacity: var(--moon-opacity, 0);
+  filter: url(#torn) drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.2));
+  z-index: 2;
+  transition: left 400ms ease-out, top 400ms ease-out, opacity 400ms ease-out;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--stars-opacity, 0);
+  background-image:
+    radial-gradient(circle at 10% 20%, #ffffff 1px, transparent 1px),
+    radial-gradient(circle at 40% 10%, #ffffff 1.5px, transparent 1.5px),
+    radial-gradient(circle at 70% 30%, #ffffff 1px, transparent 1px),
+    radial-gradient(circle at 20% 60%, #ffffff 2px, transparent 2px),
+    radial-gradient(circle at 80% 50%, #ffffff 1.5px, transparent 1.5px),
+    radial-gradient(circle at 50% 80%, #ffffff 1px, transparent 1px);
+  background-size: 100% 100%;
+  transition: opacity 500ms linear;
+}
+
+.clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+  filter: url(#torn) drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.1));
+}
+
+.cloud {
+  position: absolute;
+  opacity: 1;
+  /* Solid cutout */
+  fill: #ffffff;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08)) blur(0.3px);
+  transition: fill 600ms ease-out;
+}
+
+.cloud-1 {
+  width: 200px;
+  top: 15%;
+  left: -200px;
+  animation: drift 180s linear infinite;
+}
+
+.cloud-2 {
+  width: 165px;
+  top: 25%;
+  left: -180px;
+  animation: drift 220s linear infinite;
+  animation-delay: -80s;
+}
+
+.cloud-3 {
+  width: 230px;
+  top: 8%;
+  left: -250px;
+  animation: drift 200s linear infinite;
+  animation-delay: -140s;
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(100vw + 300px));
+  }
+}
+
+.land {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  background: var(--land, #71b954);
+  filter: url(#torn) drop-shadow(0px -2px 6px rgba(0, 0, 0, 0.15));
+  z-index: 8;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 40px;
+  clip-path: polygon(0 100%, 0 30%, 5% 25%, 10% 22%, 15% 20%, 20% 18%, 25% 16%, 30% 15%, 35% 14%, 40% 13%, 45% 12%, 50% 12%, 55% 13%, 60% 14%, 65% 15%, 70% 16%, 75% 18%, 80% 20%, 85% 22%, 90% 25%, 95% 30%, 100% 35%, 100% 100%);
+}
+
+/* curved horizon: wide ellipse that masks the land top for a soft curve */
+.land::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -70%;
+  width: 220%;
+  height: 220%;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+}
+
+.tree {
+  width: 30px;
+  height: 80px;
+  background: var(--tree-trunk, #6c5236);
+  position: absolute;
+  left: 57%;
+  transform: translateX(-50%);
+  top: 60%;
+  z-index: 9;
+  border-radius: 0;
+  transition: background 600ms ease-out;
+  overflow: visible;
+  filter: url(#torn) drop-shadow(0px -1px 4px rgba(0, 0, 0, 0.2));
+}
+
+.tree::before {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: var(--tree-color, #5c8449);
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 75px;
+  z-index: 6;
+  filter: url(#torn) drop-shadow(0px -1px 3px rgba(0, 0, 0, 0.15));
+  transition: background 600ms ease-out;
+}
+
+.bush {
+  position: absolute;
+  width: 80px;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%) scaleY(-1);
+  fill: var(--bush-color, #4c6e3b);
+  filter: url(#torn) drop-shadow(0px -2px 3px rgba(0, 0, 0, 0.2));
+  z-index: 10;
+  transition: fill 600ms ease-out;
+}
+
+/* Tablet and smaller */
+@media (max-width: 900px) {
+  .cloud-1 { width: 180px; }
+  .cloud-2 { width: 150px; }
+  .cloud-3 { width: 200px; }
+}
+
+/* Mobile landscape and smaller tablets */
+@media (max-width: 768px) {
+  .tree { width: 25px; height: 70px; }
+  .tree::before { width: 100px; height: 100px; bottom: 65px; }
+  .bush { width: 70px; }
+  .sun { width: 70px; height: 70px; }
+  .moon { width: 56px; height: 56px; }
+}
+
+/* Mobile portrait */
+@media (max-width: 600px) {
+  .tree { width: 22px; height: 60px; top: 58%; }
+  .tree::before { width: 90px; height: 90px; bottom: 55px; }
+  .bush { width: 60px; }
+  .sun { width: 60px; height: 60px; }
+  .moon { width: 50px; height: 50px; }
+  .cloud-1 { width: 140px; }
+  .cloud-2 { width: 120px; }
+  .cloud-3 { width: 160px; }
+}

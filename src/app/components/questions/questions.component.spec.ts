@@ -1,15 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
-import { JournalComponent } from './journal.component';
+import { QuestionsComponent } from './questions.component';
+import { describe, it, expect, beforeEach } from 'vitest';
 
-describe('JournalComponent', () => {
+describe('QuestionsComponent', () => {
     let httpTesting: HttpTestingController;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             // Standalone component goes in imports
-            imports: [JournalComponent],
+            imports: [QuestionsComponent],
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting()
@@ -20,25 +21,25 @@ describe('JournalComponent', () => {
     });
 
     it('should create the component', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         expect(component).toBeTruthy();
     });
 
     it('should have 7 questions', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         expect(component.questions.length).toBe(7);
     });
 
     it('should start at question 0', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         expect(component.current).toBe(0);
     });
 
     it('should advance to the next question', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         component.answer = 1;
         component.next();
@@ -46,7 +47,7 @@ describe('JournalComponent', () => {
     });
 
     it('should go back to the previous question', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         component.answer = 1;
         component.next();
@@ -55,14 +56,14 @@ describe('JournalComponent', () => {
     });
 
     it('should not go back past question 0', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         component.prev();
         expect(component.current).toBe(0);
     });
 
     it('should select an answer', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         component.selectAnswer(2);
         expect(component.answer).toBe(2);
@@ -70,7 +71,7 @@ describe('JournalComponent', () => {
     });
 
     it('should report isComplete correctly', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         expect(component.isComplete()).toBe(false);
 
@@ -80,7 +81,7 @@ describe('JournalComponent', () => {
     });
 
     it('should navigate to a specific question via goToQuestion', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
         component.selectAnswer(0);
         component.goToQuestion(4);
@@ -88,7 +89,7 @@ describe('JournalComponent', () => {
     });
 
     it('should reset component state', () => {
-        const fixture = TestBed.createComponent(JournalComponent);
+        const fixture = TestBed.createComponent(QuestionsComponent);
         const component = fixture.componentInstance;
 
         // Modify some state

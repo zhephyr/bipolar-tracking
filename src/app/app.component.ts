@@ -18,9 +18,9 @@ import { RouterModule } from '@angular/router';
     
         @if (!navCollapsed) {
           <div class="nav-content">
-            <a routerLink="/journal" routerLinkActive="active" class="nav-link">
+            <a routerLink="/questions" routerLinkActive="active" class="nav-link">
               <span class="icon">📔</span>
-              <span class="label">Journal</span>
+              <span class="label">Questions</span>
             </a>
             <a routerLink="/tracker" routerLinkActive="active" class="nav-link">
               <span class="icon">📊</span>

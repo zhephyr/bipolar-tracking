@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CheckInService } from './check-in.service';
 import { CheckIn } from '../models/check-in.model';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('CheckInService', () => {
     let service: CheckInService;

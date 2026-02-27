@@ -1,0 +1,11 @@
+<p class="question" *ngIf="question">{{ question.text }}</p>
+<div class="controls" *ngIf="question">
+    <label *ngFor="let v of [-3,-2,-1,0,1,2,3]">
+        <!-- the unique name ensures grouped radios per question in the DOM -->
+        <input type="radio" [name]="'answer_' + index" [value]="v" [checked]="answer === v" (change)="selectAnswer(v)"
+            hidden>
+        <span [class.positive]="v > 0" [class.negative]="v < 0" [class.zero]="v === 0" [class.selected]="answer === v">
+            {{ v > 0 ? '+' + v : v }}
+        </span>
+    </label>
+</div>

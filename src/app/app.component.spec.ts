@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('AppComponent', () => {
     beforeEach(async () => {

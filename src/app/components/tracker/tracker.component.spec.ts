@@ -3,6 +3,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { TrackerComponent } from './tracker.component';
+import { describe, it, expect, beforeEach } from 'vitest';
+
 
 describe('TrackerComponent', () => {
     let httpTesting: HttpTestingController;

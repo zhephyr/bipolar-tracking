@@ -1,0 +1,27 @@
+<app-landscape [progress]="progress"></app-landscape>
+
+<form class="question-form" (submit)="onSubmit($event)">
+    <h1>Daily Check-In</h1>
+
+    <app-question-modal [question]="questions[current]" [index]="current" [(answer)]="answer">
+    </app-question-modal>
+
+    <div class="nav">
+        <button type="button" (click)="prev()" [disabled]="current===0">Back</button>
+        @if (current < questions.length - 1) { <button type="button" (click)="next()">Next</button>
+            }
+            @if (current === questions.length - 1 && !justSaved) {
+            <button type="button" (click)="saveAll()" [disabled]="!isComplete()">{{hasExistingData ? 'Update' :
+                'Submit'}}</button>
+            }
+    </div>
+    @if (justSaved) {
+    <p style="text-align:center; color: var(--heading-color); margin-top: 20px; font-size: 18px;">✓ Check-in
+        {{hasExistingData ? 'updated' : 'saved'}}!</p>
+    }
+    <div class="pagination">
+        @for (q of questions; track q; let i = $index) {
+        <span class="dot" [class.active]="i === current" (click)="goToQuestion(i)"></span>
+        }
+    </div>
+</form>
